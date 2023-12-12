@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: testcloud-ingress
+  labels:
+    app: testcloud
+spec:
+  rules:
+    - host: testcloud.gdgcloudtorino.it
+      http:
+        paths:
+          - path: /cloud
+            backend:
+              service:
+                name: testcloud-service
+                port:
+                  number: 8080

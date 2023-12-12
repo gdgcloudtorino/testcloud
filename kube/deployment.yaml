@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: testcloud
+spec:
+  selector:
+    matchLabels:
+      app: testcloud
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: testcloud
+        version: v1
+    spec:
+      containers:
+        - name: testcloud
+          image: testcloud
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_FOO
+              value: bar
+            - name: APP_BAR
+              valueFrom:
+                secretKeyRef:
+                  name: my-secret
+                  key: my-secret-key
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 3
