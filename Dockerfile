@@ -1,9 +1,11 @@
 FROM maven:3-openjdk-17 AS builder
 
-COPY src /usr/src/app/src
+WORKDIR /usr/src/app
 COPY pom.xml /usr/src/app
+RUN mvn -B dependency:go-offline
 
-RUN mvn -f /usr/src/app/pom.xml clean package -DskipTests
+COPY src /usr/src/app/src
+RUN mvn -f /usr/src/app/pom.xml package -DskipTests
 
 FROM openjdk:17-jdk-slim
 ARG JAR_FILE=/usr/src/app/target/*.jar
