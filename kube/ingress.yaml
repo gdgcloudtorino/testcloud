@@ -10,6 +10,7 @@ spec:
       http:
         paths:
           - path: /cloud
+            pathType: Prefix
             backend:
               service:
                 name: testcloud-service
